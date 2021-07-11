@@ -50,67 +50,84 @@ function broadlinkSP(log, config, api) {
 broadlinkSP.prototype.getState = function(callback) {
     var self = this
     var b = new broadlink();
+    self.log('Discovering Devices');
     b.discover();
-
+    const discoveryService = setInterval(() => {
+        b.discover();
+    }, 100);
+    let didTimeout = false;
+    const timeout = setTimeout(() => {
+        didTimeout = true;
+        clearInterval(discoveryService);
+        self.log(`getState timeout, using last state: ${self.powered}`);
+        return callback(null, self.powered);
+    }, 2000);
+    let didFinishOp = false;
     b.on("deviceReady", (dev) => {
         if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
+            clearInterval(discoveryService);
             dev.check_power();
+            const checkPowerInterval = setInterval(() => {
+                dev.check_power();
+            }, 100);
             dev.on("power", (pwr) => {
+                clearTimeout(timeout);
+                clearInterval(checkPowerInterval);
                 self.log("power is on - " + pwr);
                 dev.exit();
-                if (!pwr) {
-                    self.powered = false;
-                    return callback(null, false);
-                } else {
-                    self.powered = true;
-                    return callback(null, true);
+                if(!didTimeout && !didFinishOp) {
+                    if (!pwr) {
+                        self.powered = false;
+                        didFinishOp = true;
+                        return callback(null, false);
+                    } else {
+                        self.powered = true;
+                        didFinishOp = true;
+                        return callback(null, true);
+                    }
                 }
             });
         } else {
             dev.exit();
         }
     });
+    
 }
 
 broadlinkSP.prototype.setState = function(state, callback) {
     var self = this
     var b = new broadlink();
     b.discover();
-
+    const discoveryService = setInterval(() => {
+        b.discover();
+    }, 100);
+    let didTimeout = false;
+    const setStateTimeout = setTimeout(() => {
+        didTimeout = true;
+        clearInterval(discoveryService);
+        self.log(`setState timeout`);
+        return callback(null);
+    }, 2000);
     self.log("set SP state: " + state);
-    if (state) {
-        if (this.powered) {
-            return callback(null, true)
-        } else {
-            b.on("deviceReady", (dev) => {
-                if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
-                    self.log("ON!");
-                    dev.set_power(true);
-                    dev.exit();
-                    this.powered = true;
+    let didFinishOp = false;
+    b.on("deviceReady", (dev) => {
+        if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
+            clearInterval(discoveryService);
+            clearTimeout(setStateTimeout);
+            if(!didFinishOp) {
+                didFinishOp = true;
+                self.log(`setState is now ${state}!`);
+                dev.set_power(state);
+                dev.exit();
+                this.powered = state;
+                if(!didTimeout) {
                     return callback(null);
-                } else {
-                    dev.exit();
                 }
-            });
-        }
-    } else {
-        if (this.powered) {
-            b.on("deviceReady", (dev) => {
-                if (self.mac_buff(self.mac).equals(dev.mac) || dev.host.address == self.ip) {
-                    self.log("OFF!");
-                    dev.set_power(false);
-                    dev.exit();
-                    self.powered = false;
-                    return callback(null);
-                } else {
-                    dev.exit();
-                }
-            });
+            }
         } else {
-            return callback(null, false)
+            dev.exit();
         }
-    }
+    });
 }
 
 broadlinkSP.prototype.getServices = function() {

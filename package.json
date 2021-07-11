@@ -1,11 +1,45 @@
 {
-  "name": "homebridge-broadlink-sp",
-  "version": "0.1.3",
-  "description": "Homebridge plugin for Broadlink SP2/3",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "_from": "homebridge-broadlink-sp",
+  "_id": "homebridge-broadlink-sp@0.1.3",
+  "_inBundle": false,
+  "_integrity": "sha1-RbX/rcZF9FddaWh5P3/qxoDP2Ps=",
+  "_location": "/homebridge-broadlink-sp",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "homebridge-broadlink-sp",
+    "name": "homebridge-broadlink-sp",
+    "escapedName": "homebridge-broadlink-sp",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
   },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/homebridge-broadlink-sp/-/homebridge-broadlink-sp-0.1.3.tgz",
+  "_shasum": "45b5ffadc645f4575d6968793f7feac680cfd8fb",
+  "_spec": "homebridge-broadlink-sp",
+  "_where": "/Users/assaf/repos/homekit",
+  "author": {
+    "name": "smka"
+  },
+  "bugs": {
+    "url": "https://github.com/smka/homebridge-broadlink-sp/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "broadlinkjs-sm": ">=0.1.3"
+  },
+  "deprecated": false,
+  "description": "Homebridge plugin for Broadlink SP2/3",
+  "engines": {
+    "homebridge": ">=0.2.0",
+    "node": ">=0.12.0"
+  },
+  "homepage": "https://github.com/smka/homebridge-broadlink-sp#readme",
   "keywords": [
     "homebridge-plugin",
     "broadlink",
@@ -15,21 +49,15 @@
     "homebridge",
     "sp2"
   ],
-  "engines": {
-    "node": ">=0.12.0",
-    "homebridge": ">=0.2.0"
-  },
-  "author": "smka",
   "license": "MIT",
-  "dependencies": {
-    "broadlinkjs-sm": ">=0.1.3"
-  },
+  "main": "index.js",
+  "name": "homebridge-broadlink-sp",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/smka/homebridge-broadlink-sp.git"
   },
-  "bugs": {
-    "url": "https://github.com/smka/homebridge-broadlink-sp/issues"
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "homepage": "https://github.com/smka/homebridge-broadlink-sp#readme"
+  "version": "0.1.3"
 }
